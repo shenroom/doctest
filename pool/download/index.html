@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>下载队列 - My Docs</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u4e0b\u8f7d\u961f\u5217";
+        var mkdocs_page_input_path = "pool\\download.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> My Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Welcome to MkDocs</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Pool</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">下载队列</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_2">接口</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">客户端任务队列</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../transcode/">Transcode</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../upload/">Upload</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="#">Sub</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../sub/download/">下载队列</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">My Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Pool</li>
+      <li class="breadcrumb-item active">下载队列</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">下载队列</h1>
+<h2 id="_2">接口</h2>
+<ol>
+<li><code>本地上传获取转码文件存储目录</code>：/kapi/fileRelationOperation/getTranscodeFilePath<ul>
+<li>类型：post</li>
+<li>参数：<ul>
+<li>ip：</li>
+<li>fileName：<code>原始文件</code>的名字</li>
+<li>identifier：<code>原始文件</code>的 uuid</li>
+<li>fileSize：<code>原始文件</code>的大小</li>
+<li>bizKey：业务类型（前端传过来的）</li>
+<li>projectId：项目 id（有则传）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>转码文件记录接口</code>：/kapi/fileRelationOperation/afterClientTranscode<ul>
+<li>类型：post</li>
+<li>参数：<ul>
+<li>filePath：转码文件路径（本地上传：<code>m3u8</code>文件路径；网络上传：<code>m3u8</code>上传接口返回的 fileUrl）</li>
+<li>bizKey：业务类型（前端传过来的）</li>
+<li>bizId：<code>原始文件</code>记录接口返回</li>
+<li>projectId：项目 id（有则传）</li>
+<li>status: 1 //1：成功 -1：失败</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>网络上传转码文件接口</code>:/kapi/fileRelationOperation/uploadTranscodeFile<ul>
+<li>说明：网络上传需要调用两次接口，分别上传<code>m3u8</code>文件和<code>ts</code>文件</li>
+<li>类型：post</li>
+<li>参数：<ul>
+<li>ip</li>
+<li>identifier：<code>原始文件</code>的 uuid</li>
+<li>fileSize：<code>原始文件</code>的大小</li>
+<li>bizKey：业务类型（前端传过来的）</li>
+<li>projectId：项目 id（有则传）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="_3">客户端任务队列</h2>
+<ol>
+<li>
+<p>相关状态：</p>
+<ul>
+<li>网络状态：<code>true</code>有网，<code>false</code>无网<ul>
+<li>状态变更：定时检测是否有网（5 秒）</li>
+</ul>
+</li>
+<li>kmoke 状态：<code>true</code>加载，<code>false</code>未加载（断网页面）<ul>
+<li>状态变更：启动客户端的时候初始化</li>
+</ul>
+</li>
+<li>队列状态：<code>true</code>开启，<code>false</code>关闭<ul>
+<li>状态变更：前端通知时开启</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>任务执行的前提条件：</p>
+<ul>
+<li>队列状态：<code>true</code></li>
+<li>网络状态：<code>true</code></li>
+<li>kmoke 状态：<code>true</code></li>
+</ul>
+</li>
+<li>
+<p>队列分类</p>
+<ol>
+<li>上传队列:<ul>
+<li>触发时机：客户端启动登录后，前端获取上传队列列表后，通知触发（如果已经开启则忽略）</li>
+<li>任务数据：用户上传的时候添加任务</li>
+<li>前端展示的数据列表：<ol>
+<li>启动登录客户端后，请求客户端接口获取列表</li>
+<li>用户上传文件后，客户端返回追加的数据列表</li>
+</ol>
+</li>
+<li>中断与恢复：<ol>
+<li>断网：<ul>
+<li>中断当前的队列；</li>
+<li>如果有正在进行的任务，抓取报错后判断是不是断网，如果是断网则说明是断网引起的报错，并将错误的任务重新添加到队列里面</li>
+</ul>
+</li>
+<li>来网：<ul>
+<li>恢复队列的运行</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>下载队列：<code>同上</code></li>
+<li>转码队列：<ul>
+<li>触发时机：<code>同上</code></li>
+<li>任务数据：<ul>
+<li>初始数据：请求上次关闭客户端时未完成的转码任务</li>
+<li>制作中添加：原始视频上传成功后追加</li>
+</ul>
+</li>
+<li>中断与恢复：<ol>
+<li>断网：<ul>
+<li>中断当前的队列；</li>
+<li>如果有正在进行的任务，则在转码结束后判断是否断网，如果断网则将转码的结果添加到队列中</li>
+</ul>
+</li>
+<li>来网：<ul>
+<li>恢复队列的运行</li>
+<li>判断任务是否有转码结果信息，如果有则直接上传转码结果</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>队列任务的自动<code>重试</code>与<code>永久失败</code></p>
+<ul>
+<li>可重试的情况：上传过程中报错；网络中断；接口异常等非致命错误</li>
+<li>重试：<ul>
+<li>每次重试会将任务添加到队列末尾</li>
+<li>一个任务最多重试 5 次，大于重试次数则<code>永久失败</code></li>
+<li>重试的时候会发送信号给前端（转码除外），前端展示任务状态的时候可以是个异常状态，加个类似<code>稍后自动重试</code>的提示信息</li>
+</ul>
+</li>
+<li><code>上传流程</code>：<ul>
+<li>内网拷贝：<ol>
+<li>第一步：判断原始文件是否存在（报错，致命错误<code>永久失败</code>，不可重试）</li>
+<li>第二步：判断是否是内网（报错<code>可重试</code>，重试的时候走整个流程）</li>
+<li>第三步：smb 拷贝 （报错<code>可重试</code>，重试的时候走整个流程）</li>
+<li>第四步：通知后端接口（报错<code>可重试</code>，重试的时候跳过前面步骤）</li>
+</ol>
+</li>
+<li>外网上传：<ol>
+<li>第一步：判断原始文件是否存在（报错，致命错误<code>永久失败</code>，不可重试）</li>
+<li>第二步：判断是否是外网（报错<code>可重试</code>，重试的时候走整个流程）</li>
+<li>第三步：切片上传（报错<code>可重试</code>，重试的时候需走整个流程）</li>
+<li>第四步：通知后端接口（报错<code>可重试</code>，重试的时候跳过前面步骤）</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><code>下载流程</code>：<ul>
+<li>内网拷贝：<ol>
+<li>第一步：判断是否是内网（报错<code>可重试</code>）</li>
+<li>第二部：smb 下载（报错<code>可重试</code>，重试的时候走整个流程）</li>
+</ol>
+</li>
+<li>外网下载：<ol>
+<li>第一步：判断是否是外网（报错<code>可重试</code>）</li>
+<li>第二部：外网下载（报错<code>可重试</code>，重试的时候走整个流程）</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><code>转码流程</code>：<ul>
+<li>内网转码：<ol>
+<li>第一步：判断原始文件是否存在（报错，致命错误<code>永久失败</code>，不可重试）</li>
+<li>第二步：判断是否是内网（报错<code>可重试</code>，重试的时候走整个流程）</li>
+<li>第三步：获取 nas 存储路径接口失败（报错<code>可重试</code>，重试的时候走整个流程）</li>
+<li>第四步：转码 （报错，致命错误<code>永久失败</code>，不可重试）</li>
+<li>第五步：smb 上传转码文件（报错<code>可重试</code>，重试的时候需走第二步检测内网连接情况）</li>
+<li>第六步：通知后端接口（报错<code>可重试</code>，重试的时候跳过前面步骤）</li>
+</ol>
+</li>
+<li>外网转码：<ol>
+<li>第一步：判断原始文件是否存在（报错，致命错误<code>永久失败</code>，不可重试）</li>
+<li>第二步：判断是否是外网（报错<code>可重试</code>，重试的时候走整个流程）</li>
+<li>第三步：转码 （报错，致命错误<code>永久失败</code>，不可重试）</li>
+<li>第四步：上传转码文件（报错<code>可重试</code>，重试的时候跳过前面步骤）</li>
+<li>第五步：通知后端接口（报错<code>可重试</code>，重试的时候跳过前面步骤）</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>特殊情况</p>
+<ol>
+<li>断网：<ul>
+<li>上传、下载中突然断网：可重试</li>
+<li>转码中突然断网: 如果转码任务处于本地转码中，断网不会引起转码报错，只会引起上传以及接口请求报错，通过重试机制重试</li>
+</ul>
+</li>
+<li>切换用户：unknown</li>
+<li>客户端退出：<ul>
+<li>上传、下载：再次登录继续任务</li>
+<li>转码：再次登录继续任务，如果退出登录很久？</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>前端对接逻辑：</p>
+<ul>
+<li>登录、刷新：<ol>
+<li>向客户端请求上传、下载的队列（覆盖）</li>
+<li>监听上传、下载的进度事件</li>
+<li>获取到队列并显示在界面后，通知客户端开始执行队列</li>
+</ol>
+</li>
+<li>上传：<ol>
+<li>传参加上 isNetwork，需要编码的文件类型</li>
+<li>监听上传队列的事件（追加），将数据显示到界面后，通知客户端开始执行该文件的上传（将文件的信息原样返回）</li>
+</ol>
+</li>
+<li>下载：<ol>
+<li>监听下载队列的事件（追加），将数据显示到界面后，通知客户端开始执行该文件的下载（将文件的信息原样返回）</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<p>app.addUploadJobs：添加上传任务
+app.continueUploadJob：错误任务继续上传接口
+app.addDownloadJobs：添加下载任务
+app.continueDownloadJob：错误任务继续下载
+app.getAllJobs：获取所有任务队列，传参 kmokeBaseUrl，返回接口通过 then 获取{upload:[], download:[]}
+app.startJobs：（登录，刷新）获取所有队列任务后并且前端准备好后通知客户端
+app.jobReady:手动添加的任务客户端返回前端准备好后通知
+app.downloadProgressEvent：下载进度事件{uuid:..., percent:...}
+app.uploadProgressEvent：上传进度事件{uuid:..., percent:...}
+app.JobErrorEvent：上传、下载报错事件（uuid:..., type:upload/download, message:..., errorStatus:0/错误 1/警告（稍后自动重试）
+app.addJobEvent：前端监听添加任务事件，{type:upload/download, job:{...}
+app.addJobErrorEvent：添加任务失败事件，{type"upload/download, job:{...}, message:...}
+app.kmokeLogin(kmokeBaseUrl, token)</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../.." class="btn btn-neutral float-left" title="Welcome to MkDocs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../transcode/" class="btn btn-neutral float-right" title="Transcode">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../.." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../transcode/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
